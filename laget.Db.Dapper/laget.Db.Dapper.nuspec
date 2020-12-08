@@ -15,8 +15,8 @@
     <repository type="git" url="https://github.com/laget-se/laget.Db.Dapper" branch="master" />
     <dependencies>
       <group targetFramework="netstandard2.1">
-        <dependency id="Dapper" version="(2.0,)" />
-        <dependency id="Microsoft.Data.SqlClient" version="(2.1,)" />
+        <dependency id="Dapper" version="[2.0, 2.0)" />
+        <dependency id="Microsoft.Data.SqlClient" version="[2.1, 2.0)" />
       </group>
     </dependencies>
   </metadata>
