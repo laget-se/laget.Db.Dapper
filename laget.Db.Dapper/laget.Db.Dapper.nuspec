@@ -14,12 +14,11 @@
     <icon>assets\icon.png</icon>
     <repository type="git" url="https://github.com/laget-se/laget.Db.Dapper" branch="master" />
     <dependencies>
-      <group targetFramework="netcoreapp3.1"></group>
       <group targetFramework="netstandard2.1"></group>
     </dependencies>
   </metadata>
   <files>
     <file src="..\assets\icon.png" target="assets\" />
-    <file src=".\bin\Release\netcoreapp2.1\*" target="lib\netcoreapp2.1\" />
+    <file src=".\bin\Release\netstandard2.1\*" target="lib\netstandard2.1\" />
   </files>
 </package>
