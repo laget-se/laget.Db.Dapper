@@ -2,7 +2,6 @@
 A generic implementation of Dapper, a high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc...
 
 ## Usage
-### Basic
 ```c#
 public interface IUserRepository : IRepository<Models.User>
 {
@@ -12,21 +11,6 @@ public class UserRepository : Repository<Models.User>, IUserRepository
 {
     public UserRepository(string connectionString)
         : base(connectionString)
-    {
-    }
-}
-```
-
-### Cached
-```c#
-public interface IUserRepository : IRepository<Models.User>
-{
-}
-
-public class UserRepository : CacheRepository<Models.User>, IUserRepository
-{
-    public UserRepository(string connectionString)
-        : base(connectionString, new Cache(nameof(UserRepository)))
     {
     }
 }
