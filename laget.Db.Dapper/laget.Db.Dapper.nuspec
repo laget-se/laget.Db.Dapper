@@ -10,7 +10,7 @@
     <description>A generic implementation of Dapper, a high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc...</description>
     <summary></summary>
     <license type="expression">MIT</license>
-    <projectUrl>https://github.com/laget-se/laget.Db.Dapper</projectUrl>
+    <projectUrl>https://laget.se</projectUrl>
     <icon>assets\icon.png</icon>
     <repository type="git" url="https://github.com/laget-se/laget.Db.Dapper" branch="master" />
     <dependencies>
