@@ -2,7 +2,7 @@
 
 namespace laget.Db.Dapper.Tests.Fixtures
 {
-    public class ReadOnlyRepositoryFixture<TEntity> : IDisposable where TEntity : ReadOnlyEntity
+    public class ReadOnlyRepositoryFixture<TEntity> : IDisposable where TEntity : Entity
     {
         public ReadOnlyTestRepository<TEntity> Repository { get; private set; }
 
@@ -17,7 +17,7 @@ namespace laget.Db.Dapper.Tests.Fixtures
         }
     }
 
-    public class ReadOnlyTestRepository<TEntity> : ReadOnlyRepository<TEntity> where TEntity : ReadOnlyEntity
+    public class ReadOnlyTestRepository<TEntity> : ReadOnlyRepository<TEntity> where TEntity : Entity
     {
         public ReadOnlyTestRepository() : base(string.Empty) { }
 

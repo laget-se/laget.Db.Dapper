@@ -4,7 +4,7 @@ using laget.Db.Dapper.Exceptions;
 
 namespace laget.Db.Dapper
 {
-    public class ReadOnlyRepository<TEntity> : Repository<TEntity>, IRepository<TEntity> where TEntity : ReadOnlyEntity
+    public class ReadOnlyRepository<TEntity> : Repository<TEntity>, IRepository<TEntity> where TEntity : Entity
     {
         public ReadOnlyRepository(string connectionString)
             : base(connectionString)
