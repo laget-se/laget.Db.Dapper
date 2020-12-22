@@ -39,7 +39,7 @@ namespace laget.Db.Dapper
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var sql = @$"
+                var sql = $@"
                     SELECT * FROM [{TableName}]";
 
                 return connection.Query<TEntity>(sql);
@@ -48,9 +48,9 @@ namespace laget.Db.Dapper
 
         public virtual async Task<IEnumerable<TEntity>> FindAsync()
         {
-            await using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
-                var sql = @$"
+                var sql = $@"
                     SELECT * FROM [{TableName}]";
 
                 return await connection.QueryAsync<TEntity>(sql);
@@ -61,7 +61,7 @@ namespace laget.Db.Dapper
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var sql = @$"
+                var sql = $@"
                     SELECT * FROM [{TableName}]
                     WHERE Id = @id";
 
@@ -81,9 +81,9 @@ namespace laget.Db.Dapper
 
         public virtual async Task<TEntity> GetAsync(int id)
         {
-            await using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
-                var sql = @$"
+                var sql = $@"
                     SELECT * FROM [{TableName}]
                     WHERE Id = @id";
 
@@ -115,7 +115,7 @@ namespace laget.Db.Dapper
         {
             var (sql, parameters) = GetInsertQuery(entity);
 
-            await using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 return (int)await connection.ExecuteScalarAsync(sql, parameters);
             }
@@ -153,7 +153,7 @@ namespace laget.Db.Dapper
 
         public virtual async Task DeleteAsync(TEntity entity)
         {
-            await using (var connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 var (sql, parameters) = GetDeleteQuery(entity);
 
