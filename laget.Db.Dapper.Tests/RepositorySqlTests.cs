@@ -7,9 +7,9 @@ namespace laget.Db.Dapper.Tests
 {
     public class RepositorySqlTests : IClassFixture<RepositoryFixture<TestModel>>
     {
-        readonly TestRepository<Models.TestModel> _repository;
+        readonly TestRepository<TestModel> _repository;
 
-        public RepositorySqlTests(RepositoryFixture<Models.TestModel> fixture)
+        public RepositorySqlTests(RepositoryFixture<TestModel> fixture)
         {
             _repository = fixture.Repository;
         }
@@ -17,7 +17,7 @@ namespace laget.Db.Dapper.Tests
         [Fact]
         public void GetInsertQueryGeneratesSql()
         {
-            var model = new Models.TestModel
+            var model = new TestModel
             {
                 Column1 = "foo",
                 Column2 = true,
@@ -44,7 +44,7 @@ namespace laget.Db.Dapper.Tests
         [Fact]
         public void GetUpdateQueryGeneratesSql()
         {
-            var model = new Models.TestModel
+            var model = new TestModel
             {
                 Id = 666,
                 Column1 = "foo",
@@ -68,7 +68,7 @@ namespace laget.Db.Dapper.Tests
         [Fact]
         public void GetDeleteQueryGeneratesSql()
         {
-            var model = new Models.TestModel
+            var model = new TestModel
             {
                 Id = 666
             };

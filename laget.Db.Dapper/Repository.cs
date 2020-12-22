@@ -162,7 +162,7 @@ namespace laget.Db.Dapper
         }
 
 
-        protected (string sql, object parameters) GetInsertQuery(Entity entity)
+        protected (string sql, object parameters) GetInsertQuery(TEntity entity)
         {
             var obj = entity.ToObject();
 
@@ -175,7 +175,7 @@ namespace laget.Db.Dapper
             return (sql, obj);
         }
 
-        protected (string sql, object parameters) GetUpdateQuery(Entity entity)
+        protected (string sql, object parameters) GetUpdateQuery(TEntity entity)
         {
             var obj = entity.ToObject();
 
@@ -200,7 +200,7 @@ namespace laget.Db.Dapper
             return (sql, obj);
         }
 
-        protected (string sql, object parameters) GetDeleteQuery(Entity entity)
+        protected (string sql, object parameters) GetDeleteQuery(TEntity entity)
         {
             var obj = new
             {

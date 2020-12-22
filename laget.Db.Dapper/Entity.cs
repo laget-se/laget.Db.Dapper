@@ -1,4 +1,5 @@
 ﻿using System;
+using laget.Db.Dapper.Exceptions;
 
 namespace laget.Db.Dapper
 {
@@ -9,5 +10,10 @@ namespace laget.Db.Dapper
         public DateTime UpdatedAt { get; set; }
 
         public abstract object ToObject();
+    }
+
+    public class ReadOnlyEntity : Entity
+    {
+        public override object ToObject() => throw new ReadOnlyException(GetType());
     }
 }

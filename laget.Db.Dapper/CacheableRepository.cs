@@ -66,47 +66,6 @@ namespace laget.Db.Dapper
             return result;
         }
 
-        //public override async Task<TEntity> GetAsync(int id)
-        //{
-        //    if (!string.IsNullOrWhiteSpace(Options.KeyPrefix))
-        //    {
-        //        var item = CacheGet<TEntity>(id.ToString());
-        //        if (item != null)
-        //        {
-        //            return await Task.FromResult(item);
-        //        }
-        //    }
-
-        //    var response = base.GetAsync(id);
-
-        //    if (!string.IsNullOrWhiteSpace(Options.KeyPrefix))
-        //    {
-        //        CacheAdd(id.ToString(), response.Result);
-        //    }
-
-        //    return await response;
-        //}
-
-        //public override int Insert(TEntity entity)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public override async Task<int> InsertAsync(TEntity entity)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public override void Update(TEntity entity)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public override async Task UpdateAsync(TEntity entity)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
 
         protected TZ CacheGet<TZ>(string key)
         {
