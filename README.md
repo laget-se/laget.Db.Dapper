@@ -5,6 +5,27 @@ A generic implementation of Dapper, a high performance Micro-ORM supporting SQL 
 ![Nuget](https://img.shields.io/nuget/dt/laget.Db.Dapper)
 
 ## Usage
+#### Built-in methods
+```c#
+public interface IRepository<TEntity>
+{
+    IEnumerable<TEntity> Find();
+    Task<IEnumerable<TEntity>> FindAsync();
+    TEntity Get(int id);
+    Task<TEntity> GetAsync(int id);
+
+    int Insert(TEntity entity);
+    Task<int> InsertAsync(TEntity entity);
+
+    void Update(TEntity entity);
+    Task UpdateAsync(TEntity entity);
+
+    void Delete(TEntity entity);
+    Task DeleteAsync(TEntity entity);
+}
+```
+
+### Generic
 ```c#
 public interface IUserRepository : IRepository<Models.User>
 {
