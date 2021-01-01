@@ -32,10 +32,10 @@ public class UserRepository : Repository<Models.User>, IUserRepository
     {
     }
     
-    public override TEntity Get(int id)
+    public override Models.User Get(int id)
     {
         var cacheKey = "_Id_" + id;
-        var item = CacheGet<TEntity>(cacheKey);
+        var item = CacheGet<Models.User>(cacheKey);
 
         if (item != null)
             return item;
@@ -51,7 +51,7 @@ public class UserRepository : Repository<Models.User>, IUserRepository
                 id
             };
 
-            var result = connection.QueryFirstOrDefault<TEntity>(sql, parameters);
+            var result = connection.QueryFirstOrDefault<Models.User>(sql, parameters);
 
             CacheAdd(cacheKey, result);
 
