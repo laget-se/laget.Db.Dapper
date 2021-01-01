@@ -26,8 +26,16 @@ namespace laget.Db.Dapper.Tests.Extensions
             Assert.Equal(expected, actual);
         }
 
+        [Fact]
+        public void ShouldReturnCorrectCachePrefix()
+        {
+            const string expected = "Table";
+            var actual = new TestClass().CachePrefix;
 
-        [DapperTable("tTable")]
+            Assert.Equal(expected, actual);
+        }
+
+        [DapperTable("tTable", "Table")]
 
         public class TestClass : Entity
         {
@@ -38,6 +46,15 @@ namespace laget.Db.Dapper.Tests.Extensions
                     var attribute = (DapperTableAttribute)Attribute.GetCustomAttribute(typeof(TestClass), typeof(DapperTableAttribute));
 
                     return attribute == null ? nameof(TestClass) : attribute.TableName;
+                }
+            }
+            public string CachePrefix
+            {
+                get
+                {
+                    var attribute = (DapperTableAttribute)Attribute.GetCustomAttribute(typeof(TestClass), typeof(DapperTableAttribute));
+
+                    return attribute == null ? nameof(TestClass) : attribute.CachePrefix;
                 }
             }
 

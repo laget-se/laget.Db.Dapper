@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dapper;
 using laget.Db.Dapper.Extensions;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace laget.Db.Dapper
 {
@@ -27,12 +28,27 @@ namespace laget.Db.Dapper
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
+        protected readonly IMemoryCache Cache;
         protected readonly string ConnectionString;
+
+        protected string CachePrefix => GetCachePrefix();
         protected string TableName => GetTableName();
 
         public Repository(string connectionString)
         {
             ConnectionString = connectionString;
+
+            Cache = new MemoryCache(new MemoryCacheOptions
+            {
+                ExpirationScanFrequency = TimeSpan.FromMinutes(1)
+            });
+        }
+
+        public Repository(string connectionString, MemoryCacheOptions cacheOptions)
+        {
+            ConnectionString = connectionString;
+
+            Cache = new MemoryCache(cacheOptions);
         }
 
         public virtual IEnumerable<TEntity> Find()
@@ -162,6 +178,26 @@ namespace laget.Db.Dapper
         }
 
 
+        protected TZ CacheGet<TZ>(string key)
+        {
+            return Cache.Get<TZ>($"{CachePrefix}_{key}");
+        }
+
+        protected void CacheAdd<TZ>(string key, TZ item, MemoryCacheEntryOptions options = null)
+        {
+            if (options == null)
+            {
+                options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(15),
+                    Priority = CacheItemPriority.High,
+                    SlidingExpiration = TimeSpan.FromMinutes(5)
+                };
+            }
+
+            Cache.Set($"{CachePrefix}_{key}", item, options);
+        }
+
         protected (string sql, object parameters) GetInsertQuery(TEntity entity)
         {
             var obj = entity.ToObject();
@@ -212,6 +248,13 @@ namespace laget.Db.Dapper
             return (sql, obj);
         }
 
+
+        static string GetCachePrefix()
+        {
+            var attribute = (DapperTableAttribute)Attribute.GetCustomAttribute(typeof(TEntity), typeof(DapperTableAttribute));
+
+            return attribute == null ? typeof(TEntity).Name : attribute.CachePrefix;
+        }
 
         static string GetTableName()
         {
