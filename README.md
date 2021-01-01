@@ -18,3 +18,45 @@ public class UserRepository : Repository<Models.User>, IUserRepository
     }
 }
 ```
+
+### Caching
+```c#
+public interface IUserRepository : IRepository<Models.User>
+{
+}
+
+public class UserRepository : Repository<Models.User>, IUserRepository
+{
+    public UserRepository(string connectionString)
+        : base(connectionString)
+    {
+    }
+    
+    public override TEntity Get(int id)
+    {
+        var cacheKey = "_Id_" + id;
+        var item = CacheGet<TEntity>(cacheKey);
+
+        if (item != null)
+            return item;
+
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            var sql = $@"
+                SELECT * FROM [{TableName}]
+                WHERE Id = @id";
+
+            var parameters = new
+            {
+                id
+            };
+
+            var result = connection.QueryFirstOrDefault<TEntity>(sql, parameters);
+
+            CacheAdd(cacheKey, result);
+
+            return result;
+        }
+    }
+}
+```
