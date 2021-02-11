@@ -10,7 +10,7 @@ namespace laget.Db.Dapper.Tests
         private static string ConnectionString => "Server=mssql0.example.com;Database=database;User Id=myDBReader;Password=D1fficultP%40ssw0rd;";
 
         [Fact]
-        public void ShouldReturnCorrectDatabaseName()
+        public void ShouldReturnCorrectConnectionString()
         {
             var provider = new Mock<DapperDefaultProvider>(ConnectionString).Object;
 
@@ -20,9 +20,9 @@ namespace laget.Db.Dapper.Tests
         }
 
         [Fact]
-        public void ShouldReturnCorrectCollection()
+        public void ShouldReturnAllCorrectValues()
         {
-            const int compactionPercentage = 20;
+            const double compactionPercentage = 0.25;
             var expirationScanFrequency = TimeSpan.FromMinutes(1);
             const int sizeLimit = 1024;
 

@@ -35,6 +35,20 @@ public class DatabaseModule : Module
     }
 }
 ```
+```c#
+public class DatabaseModule : Module
+{
+    protected override void Load(ContainerBuilder builder)
+    {
+        builder.Register(c => new DapperDefaultProvider(c.Resolve<IConfiguration>().GetConnectionString("SqlConnectionString"), new MemoryCacheOptions
+            {
+                CompactionPercentage = 0.25,
+                ExpirationScanFrequency = TimeSpan.FromMinutes(5),
+                SizeLimit = 1024
+            })).As<IDapperDefaultProvider>().SingleInstance();
+    }
+}
+```
 
 ### Generic
 ```c#
@@ -44,7 +58,7 @@ public interface IUserRepository : IRepository<Models.User>
 
 public class UserRepository : Repository<Models.User>, IUserRepository
 {
-    public UserRepository(IMongoDefaultProvider provider)
+    public UserRepository(IDapperDefaultProvider provider)
         : base(provider)
     {
     }
@@ -59,7 +73,7 @@ public interface IUserRepository : IRepository<Models.User>
 
 public class UserRepository : Repository<Models.User>, IUserRepository
 {
-    public UserRepository(IMongoDefaultProvider provider)
+    public UserRepository(IDapperDefaultProvider provider)
         : base(provider)
     {
     }
