@@ -34,21 +34,10 @@ namespace laget.Db.Dapper
         protected string CachePrefix => GetCachePrefix();
         protected string TableName => GetTableName();
 
-        public Repository(string connectionString)
+        public Repository(IDapperDefaultProvider provider)
         {
-            ConnectionString = connectionString;
-
-            Cache = new MemoryCache(new MemoryCacheOptions
-            {
-                ExpirationScanFrequency = TimeSpan.FromMinutes(1)
-            });
-        }
-
-        public Repository(string connectionString, MemoryCacheOptions cacheOptions)
-        {
-            ConnectionString = connectionString;
-
-            Cache = new MemoryCache(cacheOptions);
+            ConnectionString = provider.ConnectionString;
+            Cache = new MemoryCache(provider.CacheOptions);
         }
 
         public virtual IEnumerable<TEntity> Find()
@@ -249,14 +238,14 @@ namespace laget.Db.Dapper
         }
 
 
-        static string GetCachePrefix()
+        private static string GetCachePrefix()
         {
             var attribute = (DapperTableAttribute)Attribute.GetCustomAttribute(typeof(TEntity), typeof(DapperTableAttribute));
 
             return attribute == null ? typeof(TEntity).Name : attribute.CachePrefix;
         }
 
-        static string GetTableName()
+        private static string GetTableName()
         {
             var attribute = (DapperTableAttribute)Attribute.GetCustomAttribute(typeof(TEntity), typeof(DapperTableAttribute));
 

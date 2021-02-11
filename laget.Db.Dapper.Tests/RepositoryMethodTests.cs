@@ -9,7 +9,7 @@ namespace laget.Db.Dapper.Tests
 {
     public class RepositoryMethodTests
     {
-        readonly Mock<TestRepository<Models.TestModel>> _repository;
+        private readonly Mock<TestRepository<Models.TestModel>> _repository;
 
         public RepositoryMethodTests()
         {

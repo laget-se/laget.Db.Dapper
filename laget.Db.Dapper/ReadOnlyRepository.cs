@@ -6,8 +6,8 @@ namespace laget.Db.Dapper
 {
     public class ReadOnlyRepository<TEntity> : Repository<TEntity>, IRepository<TEntity> where TEntity : Entity
     {
-        public ReadOnlyRepository(string connectionString)
-            : base(connectionString)
+        public ReadOnlyRepository(IDapperDefaultProvider provider)
+            : base(provider)
         {
         }
 

@@ -19,7 +19,7 @@ namespace laget.Db.Dapper.Tests.Fixtures
 
     public class ReadOnlyTestRepository<TEntity> : ReadOnlyRepository<TEntity> where TEntity : Entity
     {
-        public ReadOnlyTestRepository() : base(string.Empty) { }
+        public ReadOnlyTestRepository() : base(new DapperDefaultProvider("Server=mssql0.example.com;Database=database;User Id=myDBReader;Password=D1fficultP%40ssw0rd;")) { }
 
         public (string sql, object parameters) ExposedGetInsertQuery(TEntity entity) => GetInsertQuery(entity);
 

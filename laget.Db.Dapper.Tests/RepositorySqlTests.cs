@@ -7,7 +7,7 @@ namespace laget.Db.Dapper.Tests
 {
     public class RepositorySqlTests : IClassFixture<RepositoryFixture<TestModel>>
     {
-        readonly TestRepository<TestModel> _repository;
+        private readonly TestRepository<TestModel> _repository;
 
         public RepositorySqlTests(RepositoryFixture<TestModel> fixture)
         {

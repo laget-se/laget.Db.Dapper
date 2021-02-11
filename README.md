@@ -1,4 +1,4 @@
-# laget.Db.Dapper
+﻿# laget.Db.Dapper
 A generic implementation of Dapper, a high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc...
 
 ![Nuget](https://img.shields.io/nuget/v/laget.Db.Dapper)
@@ -25,6 +25,17 @@ public interface IRepository<TEntity>
 }
 ```
 
+### Autofac
+```c#
+public class DatabaseModule : Module
+{
+    protected override void Load(ContainerBuilder builder)
+    {
+        builder.Register(c => new DapperDefaultProvider(c.Resolve<IConfiguration>().GetConnectionString("SqlConnectionString"))).As<IDapperDefaultProvider>().SingleInstance();
+    }
+}
+```
+
 ### Generic
 ```c#
 public interface IUserRepository : IRepository<Models.User>
@@ -33,8 +44,8 @@ public interface IUserRepository : IRepository<Models.User>
 
 public class UserRepository : Repository<Models.User>, IUserRepository
 {
-    public UserRepository(string connectionString)
-        : base(connectionString)
+    public UserRepository(IMongoDefaultProvider provider)
+        : base(provider)
     {
     }
 }
@@ -48,8 +59,8 @@ public interface IUserRepository : IRepository<Models.User>
 
 public class UserRepository : Repository<Models.User>, IUserRepository
 {
-    public UserRepository(string connectionString)
-        : base(connectionString)
+    public UserRepository(IMongoDefaultProvider provider)
+        : base(provider)
     {
     }
     
