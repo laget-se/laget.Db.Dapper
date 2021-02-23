@@ -6,7 +6,6 @@ A generic implementation of Dapper, a high performance Micro-ORM supporting SQL 
 
 ## Configuration
 > This example is shown using Autofac, since this is the go to IoC for us.
-### Autofac
 ```c#
 public class DatabaseModule : Module
 {
