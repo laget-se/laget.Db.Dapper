@@ -5,7 +5,7 @@ A generic implementation of Dapper, a high performance Micro-ORM supporting SQL 
 ![Nuget](https://img.shields.io/nuget/dt/laget.Db.Dapper)
 
 ## Configuration
-> This example is shown using Autofac, since this is the go to IoC for us.
+> This example is shown using Autofac since this is the go-to IoC for us.
 ```c#
 public class DatabaseModule : Module
 {
