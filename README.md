@@ -5,7 +5,7 @@ A generic implementation of Dapper, a high performance Micro-ORM supporting SQL 
 ![Nuget](https://img.shields.io/nuget/dt/laget.Db.Dapper)
 
 ## Usage
-#### Built-in methods
+### Built-in methods
 ```c#
 public interface IRepository<TEntity>
 {
