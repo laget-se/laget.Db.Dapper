@@ -4,27 +4,8 @@ A generic implementation of Dapper, a high performance Micro-ORM supporting SQL 
 ![Nuget](https://img.shields.io/nuget/v/laget.Db.Dapper)
 ![Nuget](https://img.shields.io/nuget/dt/laget.Db.Dapper)
 
-## Usage
-### Built-in methods
-```c#
-public interface IRepository<TEntity>
-{
-    IEnumerable<TEntity> Find();
-    Task<IEnumerable<TEntity>> FindAsync();
-    TEntity Get(int id);
-    Task<TEntity> GetAsync(int id);
-
-    int Insert(TEntity entity);
-    Task<int> InsertAsync(TEntity entity);
-
-    void Update(TEntity entity);
-    Task UpdateAsync(TEntity entity);
-
-    void Delete(TEntity entity);
-    Task DeleteAsync(TEntity entity);
-}
-```
-
+## Configuration
+> This example is shown using Autofac, since this is the go to IoC for us.
 ### Autofac
 ```c#
 public class DatabaseModule : Module
@@ -47,6 +28,27 @@ public class DatabaseModule : Module
                 SizeLimit = 1024
             })).As<IDapperDefaultProvider>().SingleInstance();
     }
+}
+```
+
+## Usage
+### Built-in methods
+```c#
+public interface IRepository<TEntity>
+{
+    IEnumerable<TEntity> Find();
+    Task<IEnumerable<TEntity>> FindAsync();
+    TEntity Get(int id);
+    Task<TEntity> GetAsync(int id);
+
+    int Insert(TEntity entity);
+    Task<int> InsertAsync(TEntity entity);
+
+    void Update(TEntity entity);
+    Task UpdateAsync(TEntity entity);
+
+    void Delete(TEntity entity);
+    Task DeleteAsync(TEntity entity);
 }
 ```
 
