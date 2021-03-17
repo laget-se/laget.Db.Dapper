@@ -1,5 +1,5 @@
-﻿# laget.Db.Dapper
-A generic implementation of Dapper, a high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc...
+# laget.Db.Dapper
+A repository pattern implementation of Dapper, a high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc...
 
 ![Nuget](https://img.shields.io/nuget/v/laget.Db.Dapper)
 ![Nuget](https://img.shields.io/nuget/dt/laget.Db.Dapper)
