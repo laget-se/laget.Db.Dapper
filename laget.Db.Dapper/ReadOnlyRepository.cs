@@ -11,22 +11,22 @@ namespace laget.Db.Dapper
         {
         }
 
-        public override int Insert(TEntity entity)
+        public override TEntity Insert(TEntity entity)
         {
             throw new ReadOnlyException(entity.GetType());
         }
 
-        public override Task<int> InsertAsync(TEntity entity)
+        public override Task<TEntity> InsertAsync(TEntity entity)
         {
             throw new ReadOnlyException(entity.GetType());
         }
 
-        public override void Update(TEntity entity)
+        public override TEntity Update(TEntity entity)
         {
             throw new ReadOnlyException(entity.GetType());
         }
 
-        public override Task UpdateAsync(TEntity entity)
+        public override Task<TEntity> UpdateAsync(TEntity entity)
         {
             throw new ReadOnlyException(entity.GetType());
         }

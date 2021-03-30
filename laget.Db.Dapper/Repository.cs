@@ -16,11 +16,11 @@ namespace laget.Db.Dapper
         TEntity Get(int id);
         Task<TEntity> GetAsync(int id);
 
-        int Insert(TEntity entity);
-        Task<int> InsertAsync(TEntity entity);
+        TEntity Insert(TEntity entity);
+        Task<TEntity> InsertAsync(TEntity entity);
 
-        void Update(TEntity entity);
-        Task UpdateAsync(TEntity entity);
+        TEntity Update(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
 
         void Delete(TEntity entity);
         Task DeleteAsync(TEntity entity);
@@ -36,8 +36,8 @@ namespace laget.Db.Dapper
 
         public Repository(IDapperDefaultProvider provider)
         {
-            ConnectionString = provider.ConnectionString;
             Cache = new MemoryCache(provider.CacheOptions);
+            ConnectionString = provider.ConnectionString;
         }
 
         public virtual IEnumerable<TEntity> Find()
@@ -106,43 +106,51 @@ namespace laget.Db.Dapper
             }
         }
 
-        public virtual int Insert(TEntity entity)
+        public virtual TEntity Insert(TEntity entity)
         {
             var (sql, parameters) = GetInsertQuery(entity);
 
             using (var connection = new SqlConnection(ConnectionString))
             {
-                return (int)connection.ExecuteScalar(sql, parameters);
+                var id = (int)connection.ExecuteScalar(sql, parameters);
+
+                return Get(id);
             }
         }
 
-        public virtual async Task<int> InsertAsync(TEntity entity)
+        public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
             var (sql, parameters) = GetInsertQuery(entity);
 
             using (var connection = new SqlConnection(ConnectionString))
             {
-                return (int)await connection.ExecuteScalarAsync(sql, parameters);
+                var id = (int)await connection.ExecuteScalarAsync(sql, parameters);
+
+                return await GetAsync(id);
             }
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual TEntity Update(TEntity entity)
         {
             var (sql, parameters) = GetUpdateQuery(entity);
 
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.ExecuteScalar(sql, parameters);
+
+                return Get(entity.Id);
             }
         }
 
-        public virtual async Task UpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             var (sql, parameters) = GetUpdateQuery(entity);
 
             using (var connection = new SqlConnection(ConnectionString))
             {
                 await connection.ExecuteScalarAsync(sql, parameters);
+
+                return await GetAsync(entity.Id);
             }
         }
 
@@ -166,26 +174,6 @@ namespace laget.Db.Dapper
             }
         }
 
-
-        protected TZ CacheGet<TZ>(string key)
-        {
-            return Cache.Get<TZ>($"{CachePrefix}_{key}");
-        }
-
-        protected void CacheAdd<TZ>(string key, TZ item, MemoryCacheEntryOptions options = null)
-        {
-            if (options == null)
-            {
-                options = new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpiration = DateTime.Now.AddMinutes(15),
-                    Priority = CacheItemPriority.High,
-                    SlidingExpiration = TimeSpan.FromMinutes(5)
-                };
-            }
-
-            Cache.Set($"{CachePrefix}_{key}", item, options);
-        }
 
         protected (string sql, object parameters) GetInsertQuery(TEntity entity)
         {
@@ -235,6 +223,32 @@ namespace laget.Db.Dapper
             var sql = $"DELETE FROM [{TableName}] WHERE Id = @Id";
 
             return (sql, obj);
+        }
+
+
+        protected TZ CacheGet<TZ>(string key)
+        {
+            return Cache.Get<TZ>($"{CachePrefix}_{key}");
+        }
+
+        protected void CacheAdd<TZ>(string key, TZ item, MemoryCacheEntryOptions options = null)
+        {
+            if (options == null)
+            {
+                options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(15),
+                    Priority = CacheItemPriority.High,
+                    SlidingExpiration = TimeSpan.FromMinutes(5)
+                };
+            }
+
+            Cache.Set($"{CachePrefix}_{key}", item, options);
+        }
+
+        protected void CacheRemove(string key)
+        {
+            Cache.Remove(key);
         }
 
 
