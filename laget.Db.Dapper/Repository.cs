@@ -13,6 +13,7 @@ namespace laget.Db.Dapper
     {
         IEnumerable<TEntity> Find();
         Task<IEnumerable<TEntity>> FindAsync();
+
         TEntity Get(int id);
         Task<TEntity> GetAsync(int id);
 
