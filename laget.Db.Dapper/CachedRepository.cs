@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -25,6 +26,20 @@ namespace laget.Db.Dapper
             return await Cache.GetOrCreate(cacheKey, entry => base.FindAsync());
         }
 
+        public override IEnumerable<TEntity> Find(string where)
+        {
+            var cacheKey = $"{CachePrefix}_{where.GetHashCode()}";
+
+            return Cache.GetOrCreate(cacheKey, entry => base.Find());
+        }
+
+        public override async Task<IEnumerable<TEntity>> FindAsync(string where)
+        {
+            var cacheKey = $"{CachePrefix}_{where.GetHashCode()}";
+
+            return await Cache.GetOrCreate(cacheKey, entry => base.FindAsync());
+        }
+
         public override TEntity Get(int id)
         {
             var cacheKey = $"{CachePrefix}_Id_{id}";
@@ -37,6 +52,20 @@ namespace laget.Db.Dapper
             var cacheKey = $"{CachePrefix}_Id_{id}";
 
             return await Cache.GetOrCreate(cacheKey, entry => base.GetAsync(id));
+        }
+
+        public override IEnumerable<TEntity> Get(int[] ids)
+        {
+            var cacheKey = $"{CachePrefix}_Ids_{string.Join(string.Empty, ids).GetHashCode()}";
+
+            return Cache.GetOrCreate(cacheKey, entry => base.Get(ids));
+        }
+
+        public override async Task<IEnumerable<TEntity>> GetAsync(int[] ids)
+        {
+            var cacheKey = $"{CachePrefix}_Ids_{string.Join(string.Empty, ids).GetHashCode()}";
+
+            return await Cache.GetOrCreate(cacheKey, entry => base.GetAsync(ids));
         }
 
         public override TEntity Insert(TEntity entity)
