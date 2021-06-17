@@ -52,5 +52,15 @@ namespace laget.Db.Dapper
         {
             throw new ReadOnlyException(entity.GetType());
         }
+
+        public override void Delete(IEnumerable<TEntity> entities)
+        {
+            throw new ReadOnlyException(entities.First().GetType());
+        }
+
+        public override Task DeleteAsync(IEnumerable<TEntity> entities)
+        {
+            throw new ReadOnlyException(entities.First().GetType());
+        }
     }
 }

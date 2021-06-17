@@ -33,6 +33,8 @@ namespace laget.Db.Dapper
 
         void Delete(TEntity entity);
         Task DeleteAsync(TEntity entity);
+        void Delete(IEnumerable<TEntity> entities);
+        Task DeleteAsync(IEnumerable<TEntity> entities);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
@@ -292,6 +294,54 @@ namespace laget.Db.Dapper
                 var (sql, parameters) = GetDeleteQuery(entity);
 
                 await connection.ExecuteAsync(sql, parameters);
+            }
+        }
+
+        public virtual void Delete(IEnumerable<TEntity> entities)
+        {
+            var (sql, parameters) = GetDeleteQuery(entities.First());
+
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        connection.Execute(sql, entities, transaction);
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new TransactionException($"An error occurred when executing sql transaction ({ex.Message})", ex);
+                    }
+                }
+            }
+        }
+
+        public virtual async Task DeleteAsync(IEnumerable<TEntity> entities)
+        {
+            var (sql, parameters) = GetDeleteQuery(entities.First());
+
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        await connection.ExecuteAsync(sql, entities, transaction);
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new TransactionException($"An error occurred when executing sql transaction ({ex.Message})", ex);
+                    }
+                }
             }
         }
 
