@@ -30,6 +30,8 @@ namespace laget.Db.Dapper
 
         TEntity Update(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entity);
+        void Update(IEnumerable<TEntity> entities);
+        Task UpdateAsync(IEnumerable<TEntity> entities);
 
         void Delete(TEntity entity);
         Task DeleteAsync(TEntity entity);
@@ -277,6 +279,54 @@ namespace laget.Db.Dapper
             }
         }
 
+        public void Update(IEnumerable<TEntity> entities)
+        {
+            var (sql, parameters) = GetUpdateQuery(entities.First());
+
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        connection.Execute(sql, entities, transaction);
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new TransactionException($"An error occurred when executing sql transaction ({ex.Message})", ex);
+                    }
+                }
+            }
+        }
+
+        public async Task UpdateAsync(IEnumerable<TEntity> entities)
+        {
+            var (sql, parameters) = GetUpdateQuery(entities.First());
+
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        await connection.ExecuteAsync(sql, entities, transaction);
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new TransactionException($"An error occurred when executing sql transaction ({ex.Message})", ex);
+                    }
+                }
+            }
+        }
+
         public virtual void Delete(TEntity entity)
         {
             using (var connection = new SqlConnection(ConnectionString))
@@ -354,7 +404,7 @@ namespace laget.Db.Dapper
             var columns = string.Join(",", properties);
             var keys = string.Join(",", properties.Select(x => $"@{x}"));
 
-            var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT inserted.Id VALUES ({keys})";
+            var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT INSERTED.Id VALUES ({keys})";
 
             return (sql, obj);
         }
