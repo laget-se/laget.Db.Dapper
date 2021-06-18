@@ -82,8 +82,6 @@ namespace laget.Db.Dapper
                 var sql = $@"
                     SELECT * FROM [{TableName}] WHERE {where}";
 
-                Validate(sql);
-
                 return connection.Query<TEntity>(sql);
             }
         }
@@ -94,8 +92,6 @@ namespace laget.Db.Dapper
             {
                 var sql = $@"
                     SELECT * FROM [{TableName}] WHERE {where}";
-
-                Validate(sql);
 
                 return await connection.QueryAsync<TEntity>(sql);
             }
@@ -446,16 +442,6 @@ namespace laget.Db.Dapper
             return (sql, obj);
         }
 
-
-        protected void Validate(string sql)
-        {
-            var valid = sql.IsValid(out var errors);
-
-            if (!valid)
-            {
-                throw new InvalidSqlException(errors);
-            }
-        }
 
         protected TZ CacheGet<TZ>(string key)
         {
