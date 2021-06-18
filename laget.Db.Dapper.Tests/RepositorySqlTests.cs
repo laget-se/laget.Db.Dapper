@@ -57,7 +57,7 @@ namespace laget.Db.Dapper.Tests
             var query = _repository.ExposedGetUpdateQuery(model);
             dynamic parameters = query.parameters;
 
-            Assert.Equal("UPDATE [TestModel] SET Column1 = @Column1, Column2 = @Column2, Column3 = @Column3, Column4 = @Column4, Column5 = @Column5 WHERE Id = 666", query.sql);
+            Assert.Equal("UPDATE [TestModel] SET Column1 = @Column1, Column2 = @Column2, Column3 = @Column3, Column4 = @Column4, Column5 = @Column5 WHERE Id = @Id", query.sql);
             Assert.Equal(model.Column1, parameters.Column1);
             Assert.Equal(model.Column2, parameters.Column2);
             Assert.Equal(model.Column3, parameters.Column3);

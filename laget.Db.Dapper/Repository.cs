@@ -219,7 +219,7 @@ namespace laget.Db.Dapper
                 {
                     try
                     {
-                        connection.Execute(sql, entities, transaction);
+                        var test = connection.Execute(sql, entities, transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -429,7 +429,7 @@ namespace laget.Db.Dapper
                 sql += $"{value} = @{value}, ";
             }
 
-            sql += $"WHERE Id = {entity.Id}";
+            sql += "WHERE Id = @Id";
 
             return (sql, obj);
         }
