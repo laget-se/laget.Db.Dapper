@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
-using laget.Db.Dapper.Exceptions;
 using laget.Db.Dapper.Extensions;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
@@ -79,8 +78,7 @@ namespace laget.Db.Dapper
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var sql = $@"
-                    SELECT * FROM [{TableName}] WHERE {where}";
+                var sql = GetWhereQuery(where);
 
                 return connection.Query<TEntity>(sql);
             }
@@ -90,8 +88,7 @@ namespace laget.Db.Dapper
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var sql = $@"
-                    SELECT * FROM [{TableName}] WHERE {where}";
+                var sql = GetWhereQuery(where);
 
                 return await connection.QueryAsync<TEntity>(sql);
             }
@@ -442,6 +439,12 @@ namespace laget.Db.Dapper
             return (sql, obj);
         }
 
+        protected string GetWhereQuery(string where)
+        {
+            var sql = $"SELECT * FROM [{TableName}] WHERE {where}";
+
+            return sql;
+        }
 
         protected TZ CacheGet<TZ>(string key)
         {

@@ -79,5 +79,13 @@ namespace laget.Db.Dapper.Tests
             Assert.Equal("DELETE FROM [TestModel] WHERE Id = @Id", query.sql);
             Assert.Equal(666, model.Id);
         }
+
+        [Fact]
+        public void GetWhereQueryGeneratesSql()
+        {
+            var query = _repository.ExposedGetWhereQuery("Property = 0 AND Status = 1");
+
+            Assert.Equal("SELECT * FROM [TestModel] WHERE Property = 0 AND Status = 1", query);
+        }
     }
 }
