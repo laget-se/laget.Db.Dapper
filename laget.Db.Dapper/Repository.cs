@@ -181,7 +181,7 @@ namespace laget.Db.Dapper
             var obj = entity.ToObject();
 
             var properties = obj.GetType().GetProperties().ToList().Select(x => x.Name);
-            var columns = string.Join(",", properties);
+            var columns = string.Join(",", properties.Select(x => $"[{x}]"));
             var keys = string.Join(",", properties.Select(x => $"@{x}"));
 
             var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT inserted.Id VALUES ({keys})";
@@ -194,22 +194,8 @@ namespace laget.Db.Dapper
             var obj = entity.ToObject();
 
             var properties = obj.GetType().GetProperties().ToList().Select(x => x.Name).ToList();
-            var sql = $"UPDATE [{TableName}] SET ";
-
-            for (var i = 0; i < properties.Count; i++)
-            {
-                var value = properties[i];
-
-                if ((i + 1) == properties.Count)
-                {
-                    sql += $"{value} = @{value} ";
-                    break;
-                }
-
-                sql += $"{value} = @{value}, ";
-            }
-
-            sql += $"WHERE Id = {entity.Id}";
+            var columnKeys = string.Join(", ", properties.Select(x => $"[{x}] = @{x}"));
+            var sql = $"UPDATE [{TableName}] SET {columnKeys} WHERE Id = {entity.Id}";
 
             return (sql, obj);
         }
