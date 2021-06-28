@@ -39,5 +39,33 @@ namespace laget.Db.Dapper.Tests
 
             Assert.Equal(3, models.Count);
         }
+
+        [Fact]
+        public void FindWithQueryReturnsData()
+        {
+            const string query = "Property = 0";
+
+            _repository.Setup(x => x.Find(query)).Returns(new List<Models.TestModel> { new Models.TestModel(), new Models.TestModel(), new Models.TestModel() });
+
+            var models = _repository.Object.Find(query).ToList();
+
+            _repository.Verify(x => x.Find(query), Times.Once());
+
+            Assert.Equal(3, models.Count);
+        }
+
+        [Fact]
+        public async Task FindAsyncWithQueryReturnsData()
+        {
+            const string query = "Property = 0";
+
+            _repository.Setup(x => x.FindAsync(query)).Returns(Task.FromResult(new List<Models.TestModel> { new Models.TestModel(), new Models.TestModel(), new Models.TestModel() }.AsEnumerable()));
+
+            var models = (await _repository.Object.FindAsync(query)).ToList();
+
+            _repository.Verify(x => x.FindAsync(query), Times.Once());
+
+            Assert.Equal(3, models.Count);
+        }
     }
 }
