@@ -29,5 +29,7 @@ namespace laget.Db.Dapper.Tests.Fixtures
         public (string sql, object parameters) ExposedGetUpdateQuery(TEntity entity) => GetUpdateQuery(entity);
 
         public (string sql, object parameters) ExposedGetDeleteQuery(TEntity entity) => GetDeleteQuery(entity);
+
+        public string ExposedGetWhereQuery(string where) => GetWhereQuery(where);
     }
 }
