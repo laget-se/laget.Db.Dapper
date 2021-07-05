@@ -1,16 +1,21 @@
 ﻿using System;
+using laget.Db.Dapper.Extensions;
 
 namespace laget.Db.Dapper.Tests.Models
 {
-    public class TestModel : Entity
+    [DapperTable("Attributes")]
+    public class AttributeTestModel : Entity
     {
+        [DapperColumn("intId")]
+        public override int Id { get; set; }
         public string Column1 { get; set; }
         public bool Column2 { get; set; }
         public int Column3 { get; set; }
         public string Column4 { get; set; }
-        public virtual int? Column5 { get; set; }
+        [DapperColumn("Column6")]
+        public int? Column5 { get; set; }
 
-        public TestModel()
+        public AttributeTestModel()
         {
             Id = int.MaxValue;
             CreatedAt = DateTime.Now.AddMonths(-1);

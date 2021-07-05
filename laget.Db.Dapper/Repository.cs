@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
@@ -393,11 +394,11 @@ namespace laget.Db.Dapper
         {
             var obj = entity.ToObject();
 
-            var properties = obj.GetType().GetProperties().ToList().Select(x => x.Name);
+            var properties = obj.GetType().GetProperties().Select(x => GetColumnName(entity, x));
             var columns = string.Join(",", properties.Select(x => $"[{x}]"));
             var keys = string.Join(",", properties.Select(x => $"@{x}"));
 
-            var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT INSERTED.Id VALUES ({keys})";
+            var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT INSERTED.{GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault())} VALUES ({keys})";
 
             return (sql, obj);
         }
@@ -406,9 +407,10 @@ namespace laget.Db.Dapper
         {
             var obj = entity.ToObject();
 
-            var properties = obj.GetType().GetProperties().ToList().Select(x => x.Name).ToList();
+            var properties = obj.GetType().GetProperties().Select(x => GetColumnName(entity, x));
             var columnKeys = string.Join(", ", properties.Select(x => $"[{x}] = @{x}"));
-            var sql = $"UPDATE [{TableName}] SET {columnKeys} WHERE Id = @Id";
+
+            var sql = $"UPDATE [{TableName}] SET {columnKeys} WHERE [{GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault())}] = @Id";
 
             return (sql, obj);
         }
@@ -457,6 +459,20 @@ namespace laget.Db.Dapper
             Cache.Remove(key);
         }
 
+
+        private static string GetColumnName(TEntity entity, MemberInfo memberInfo)
+        {
+            var attribute = (DapperColumnAttribute)(entity.GetType().GetProperties()
+                .FirstOrDefault(x => x.Name == memberInfo.Name))?
+                .GetCustomAttribute(typeof(DapperColumnAttribute));
+
+            if (attribute != null)
+            {
+                return attribute.ColumnName;
+            }
+
+            return memberInfo.Name;
+        }
 
         private static string GetCachePrefix()
         {
