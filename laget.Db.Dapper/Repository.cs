@@ -398,7 +398,7 @@ namespace laget.Db.Dapper
             var columns = string.Join(",", properties.Select(x => $"[{x}]"));
             var keys = string.Join(",", properties.Select(x => $"@{x}"));
 
-            var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT INSERTED.{GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault())} VALUES ({keys})";
+            var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT INSERTED.[{GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault())}] VALUES ({keys})";
 
             return (sql, obj);
         }
@@ -422,7 +422,7 @@ namespace laget.Db.Dapper
                 entity.Id
             };
 
-            var sql = $"DELETE FROM [{TableName}] WHERE Id = @Id";
+            var sql = $"DELETE FROM [{TableName}] WHERE [{GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault())}] = @Id";
 
             return (sql, obj);
         }

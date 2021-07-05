@@ -29,7 +29,7 @@ namespace laget.Db.Dapper.Tests
             var query = _repository.ExposedGetInsertQuery(model);
             dynamic parameters = query.parameters;
 
-            Assert.Equal("INSERT INTO [TestModel] ([Column1],[Column2],[Column3],[Column4],[Column5]) OUTPUT INSERTED.Id VALUES (@Column1,@Column2,@Column3,@Column4,@Column5)", query.sql);
+            Assert.Equal("INSERT INTO [TestModel] ([Column1],[Column2],[Column3],[Column4],[Column5]) OUTPUT INSERTED.[Id] VALUES (@Column1,@Column2,@Column3,@Column4,@Column5)", query.sql);
             Assert.Equal(model.Column1, parameters.Column1);
             Assert.Equal(model.Column2, parameters.Column2);
             Assert.Equal(model.Column3, parameters.Column3);
@@ -76,7 +76,7 @@ namespace laget.Db.Dapper.Tests
             var query = _repository.ExposedGetDeleteQuery(model);
             dynamic parameters = query.parameters;
 
-            Assert.Equal("DELETE FROM [TestModel] WHERE Id = @Id", query.sql);
+            Assert.Equal("DELETE FROM [TestModel] WHERE [Id] = @Id", query.sql);
             Assert.Equal(666, model.Id);
         }
 
