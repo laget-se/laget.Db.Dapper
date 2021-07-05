@@ -8,7 +8,7 @@ namespace laget.Db.Dapper.Tests.Models
         public bool Column2 { get; set; }
         public int Column3 { get; set; }
         public string Column4 { get; set; }
-        public virtual int? Column5 { get; set; }
+        public int? Column5 { get; set; }
 
         public TestModel()
         {
