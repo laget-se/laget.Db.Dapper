@@ -5,11 +5,11 @@ using Xunit;
 
 namespace laget.Db.Dapper.Tests
 {
-    public class RepositorySqlTests : IClassFixture<RepositoryFixture<TestModel>>
+    public class RepositoryAttributeSqlTests : IClassFixture<RepositoryFixture<AttributeTestModel>>
     {
-        private readonly TestRepository<TestModel> _repository;
+        private readonly TestRepository<AttributeTestModel> _repository;
 
-        public RepositorySqlTests(RepositoryFixture<TestModel> fixture)
+        public RepositoryAttributeSqlTests(RepositoryFixture<AttributeTestModel> fixture)
         {
             _repository = fixture.Repository;
         }
@@ -17,7 +17,7 @@ namespace laget.Db.Dapper.Tests
         [Fact]
         public void GetInsertQueryGeneratesSql()
         {
-            var model = new TestModel
+            var model = new AttributeTestModel
             {
                 Column1 = "foo",
                 Column2 = true,
@@ -29,7 +29,7 @@ namespace laget.Db.Dapper.Tests
             var query = _repository.ExposedGetInsertQuery(model);
             dynamic parameters = query.parameters;
 
-            Assert.Equal("INSERT INTO [TestModel] ([Column1],[Column2],[Column3],[Column4],[Column5]) OUTPUT INSERTED.[Id] VALUES (@Column1,@Column2,@Column3,@Column4,@Column5)", query.sql);
+            Assert.Equal("INSERT INTO [Attributes] ([Column1],[Column2],[Column3],[Column4],[Column6]) OUTPUT INSERTED.[intId] VALUES (@Column1,@Column2,@Column3,@Column4,@Column6)", query.sql);
             Assert.Equal(model.Column1, parameters.Column1);
             Assert.Equal(model.Column2, parameters.Column2);
             Assert.Equal(model.Column3, parameters.Column3);
@@ -44,7 +44,7 @@ namespace laget.Db.Dapper.Tests
         [Fact]
         public void GetUpdateQueryGeneratesSql()
         {
-            var model = new TestModel
+            var model = new AttributeTestModel
             {
                 Id = 666,
                 Column1 = "foo",
@@ -57,7 +57,7 @@ namespace laget.Db.Dapper.Tests
             var query = _repository.ExposedGetUpdateQuery(model);
             dynamic parameters = query.parameters;
 
-            Assert.Equal("UPDATE [TestModel] SET [Column1] = @Column1, [Column2] = @Column2, [Column3] = @Column3, [Column4] = @Column4, [Column5] = @Column5 WHERE [Id] = @Id", query.sql);
+            Assert.Equal("UPDATE [Attributes] SET [Column1] = @Column1, [Column2] = @Column2, [Column3] = @Column3, [Column4] = @Column4, [Column6] = @Column6 WHERE [intId] = @Id", query.sql);
             Assert.Equal(model.Column1, parameters.Column1);
             Assert.Equal(model.Column2, parameters.Column2);
             Assert.Equal(model.Column3, parameters.Column3);
@@ -68,7 +68,7 @@ namespace laget.Db.Dapper.Tests
         [Fact]
         public void GetDeleteQueryGeneratesSql()
         {
-            var model = new TestModel
+            var model = new AttributeTestModel
             {
                 Id = 666
             };
@@ -76,7 +76,7 @@ namespace laget.Db.Dapper.Tests
             var query = _repository.ExposedGetDeleteQuery(model);
             dynamic parameters = query.parameters;
 
-            Assert.Equal("DELETE FROM [TestModel] WHERE [Id] = @Id", query.sql);
+            Assert.Equal("DELETE FROM [Attributes] WHERE [intId] = @Id", query.sql);
             Assert.Equal(666, model.Id);
         }
 
@@ -85,7 +85,7 @@ namespace laget.Db.Dapper.Tests
         {
             var query = _repository.ExposedGetWhereQuery("Property = 0 AND Status = 1");
 
-            Assert.Equal("SELECT * FROM [TestModel] WHERE Property = 0 AND Status = 1", query);
+            Assert.Equal("SELECT * FROM [Attributes] WHERE Property = 0 AND Status = 1", query);
         }
     }
 }
