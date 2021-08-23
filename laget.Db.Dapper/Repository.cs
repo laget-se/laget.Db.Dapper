@@ -255,9 +255,23 @@ namespace laget.Db.Dapper
 
             using (var connection = new SqlConnection(ConnectionString))
             {
-                connection.ExecuteScalar(sql, parameters);
+                connection.Open();
 
-                return Get(entity.Id);
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        connection.Execute(sql, entity, transaction);
+                        transaction.Commit();
+
+                        return Get(entity.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new TransactionException($"An error occurred when executing sql transaction ({ex.Message})", ex);
+                    }
+                }
             }
         }
 
@@ -267,9 +281,23 @@ namespace laget.Db.Dapper
 
             using (var connection = new SqlConnection(ConnectionString))
             {
-                await connection.ExecuteScalarAsync(sql, parameters);
+                await connection.OpenAsync();
 
-                return await GetAsync(entity.Id);
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        await connection.ExecuteAsync(sql, entity, transaction);
+                        transaction.Commit();
+
+                        return await GetAsync(entity.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new TransactionException($"An error occurred when executing sql transaction ({ex.Message})", ex);
+                    }
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using laget.Db.Dapper.Extensions;
 using Xunit;
 
@@ -29,7 +30,17 @@ namespace laget.Db.Dapper.Tests
         }
 
         [Fact(Skip = "These tests run actual database calls, we need to provide a way to test these methods without an actual database call!")]
-        public void ShouldUpdateMultipleItems()
+        public void ShouldUpdateItem()
+        {
+            var domain = _repository.Find("Name LIKE 'temp.co'").First();
+
+            domain.SiteId = 1337;
+
+            _repository.Update(domain);
+        }
+
+        [Fact(Skip = "These tests run actual database calls, we need to provide a way to test these methods without an actual database call!")]
+        public void ShouldUpdateItems()
         {
             var domains = _repository.Find("Name LIKE '%temp%'");
 
