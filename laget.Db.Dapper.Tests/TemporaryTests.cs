@@ -16,54 +16,68 @@ namespace laget.Db.Dapper.Tests
             _repository = new TemporaryRepository(provider);
         }
 
-        [Fact(Skip = "These tests run actual database calls, we need to provide a way to test these methods without an actual database call!")]
-        public void ShouldInsertMultipleItems()
-        {
-            var domains = new List<Domain>
-            {
-                new Domain { ClubId = 67347, Name = "temp.co" },
-                new Domain { ClubId = 67347, Name = "temp.se" },
-                new Domain { ClubId = 67347, Name = "temp.uk" }
-            };
+        //[Fact]
+        //public void ShouldInsertItem()
+        //{
+        //    var season = new Season { Name = "1859", Visible = 2 };
+        //    var output = _repository.Insert(season);
+        //}
 
-            _repository.Insert(domains);
-        }
+        //[Fact]
+        //public void ShouldInsertItems()
+        //{
+        //    var domain = new Domain { ClubId = 67347, Name = "temp.co" };
+        //    var output =  _repository.Insert(domain);
+        //}
 
-        [Fact(Skip = "These tests run actual database calls, we need to provide a way to test these methods without an actual database call!")]
-        public void ShouldUpdateItem()
-        {
-            var domain = _repository.Find("Name LIKE 'temp.co'").First();
+        //[Fact]
+        //public void ShouldInsertMultipleItems()
+        //{
+        //    var domains = new List<Domain>
+        //    {
+        //        new Domain { ClubId = 67347, Name = "temp.co" },
+        //        new Domain { ClubId = 67347, Name = "temp.se" },
+        //        new Domain { ClubId = 67347, Name = "temp.uk" }
+        //    };
 
-            domain.SiteId = 1337;
+        //    _repository.Insert(domain);
+        //}
 
-            _repository.Update(domain);
-        }
+        //[Fact]
+        //public void ShouldUpdateItem()
+        //{
+        //    var domain = _repository.Find("Name LIKE 'temp.co'").First();
 
-        [Fact(Skip = "These tests run actual database calls, we need to provide a way to test these methods without an actual database call!")]
-        public void ShouldUpdateItems()
-        {
-            var domains = _repository.Find("Name LIKE '%temp%'");
+        //    domain.SiteId = 1337;
 
-            foreach (var domain in domains)
-            {
-                domain.SiteId = 134049;
-            }
+        //    _repository.Update(domain);
+        //}
 
-            _repository.Update(domains);
-        }
+        //[Fact]
+        //public void ShouldUpdateItems()
+        //{
+        //    var domains = _repository.Find("Name LIKE '%temp%'");
 
-        [Fact(Skip = "These tests run actual database calls, we need to provide a way to test these methods without an actual database call!")]
-        public void ShouldDeleteMultipleItems()
-        {
-            var domains = new List<Domain>
-            {
-                new Domain { Id = 1333 },
-                new Domain { Id = 1334 },
-                new Domain { Id = 1335 }
-            };
+        //    foreach (var domain in domains)
+        //    {
+        //        domain.SiteId = 134049;
+        //    }
 
-            _repository.Delete(domains);
-        }
+        //    _repository.Update(domains);
+        //}
+
+        //[Fact]
+        //public void ShouldDeleteMultipleItems()
+        //{
+        //    var domains = new List<Domain>
+        //    {
+        //        new Domain { Id = 1333 },
+        //        new Domain { Id = 1334 },
+        //        new Domain { Id = 1335 }
+        //    };
+
+        //    _repository.Delete(domains);
+        //}
     }
 
     [DapperTable("tAcmeDomain")]
@@ -92,6 +106,23 @@ namespace laget.Db.Dapper.Tests
             Valid,
             RenewedAt,
             ExpiresAt
+        };
+    }
+
+    [DapperTable("tSeason")]
+    public class Season : Entity
+    {
+        [DapperColumn("intSeasonId")]
+        public override int Id { get; set; }
+        [DapperColumn("strSeasonName")]
+        public string Name { get; set; }
+        [DapperColumn("intSeasonVisible")]
+        public int Visible { get; set; }
+
+        public override object ToObject() => new
+        {
+            Name,
+            Visible
         };
     }
 

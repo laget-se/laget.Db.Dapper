@@ -51,6 +51,9 @@ namespace laget.Db.Dapper
         {
             Cache = new MemoryCache(provider.CacheOptions);
             ConnectionString = provider.ConnectionString;
+
+            SqlMapper.SetTypeMap(typeof(TEntity), new CustomPropertyTypeMap(typeof(TEntity), (type, columnName)
+                => type.GetProperties().FirstOrDefault(prop => GetColumnName(prop) == columnName.ToLower())));
         }
 
         public virtual IEnumerable<TEntity> Find()
@@ -99,9 +102,12 @@ namespace laget.Db.Dapper
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
+                var entity = Activator.CreateInstance<TEntity>();
+                var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
+
                 var sql = $@"
                     SELECT * FROM [{TableName}]
-                    WHERE Id = @id";
+                    WHERE [{index.Key}] = @id";
 
                 var parameters = new
                 {
@@ -121,9 +127,12 @@ namespace laget.Db.Dapper
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
+                var entity = Activator.CreateInstance<TEntity>();
+                var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
+
                 var sql = $@"
                     SELECT * FROM [{TableName}]
-                    WHERE Id = @id";
+                    WHERE [{index.Key}] = @id";
 
                 var parameters = new
                 {
@@ -143,9 +152,12 @@ namespace laget.Db.Dapper
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
+                var entity = Activator.CreateInstance<TEntity>();
+                var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
+
                 var sql = $@"
                     SELECT * FROM [{TableName}]
-                    WHERE Id IN @ids";
+                    WHERE [{index.Key}] IN @ids";
 
                 var parameters = new
                 {
@@ -162,9 +174,12 @@ namespace laget.Db.Dapper
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
+                var entity = Activator.CreateInstance<TEntity>();
+                var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
+
                 var sql = $@"
                     SELECT * FROM [{TableName}]
-                    WHERE Id IN @ids";
+                    WHERE [{index.Value}] IN @ids";
 
                 var parameters = new
                 {
@@ -213,7 +228,7 @@ namespace laget.Db.Dapper
                 {
                     try
                     {
-                        var test = connection.Execute(sql, entities, transaction);
+                        connection.Execute(sql, entities, transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -497,20 +512,24 @@ namespace laget.Db.Dapper
             return attribute == null ? typeof(TEntity).Name : attribute.CachePrefix;
         }
 
+        private static string GetColumnName(MemberInfo member)
+        {
+            if (member == null) return null;
+
+            var attribute = (DapperColumnAttribute)Attribute.GetCustomAttribute(member, typeof(DapperColumnAttribute), false);
+
+            return (attribute?.ColumnName ?? member.Name).ToLower();
+        }
+
         private static KeyValuePair<string, string> GetColumnName(TEntity entity, MemberInfo memberInfo)
         {
             var attribute = (DapperColumnAttribute)(entity.GetType().GetProperties()
                 .FirstOrDefault(x => x.Name == memberInfo.Name))?
                 .GetCustomAttribute(typeof(DapperColumnAttribute));
 
-            if (attribute != null)
-            {
-                //return (attribute.ColumnName, memberInfo.Name);
-                return new KeyValuePair<string, string>(attribute.ColumnName, memberInfo.Name);
-            }
-
-            //return (memberInfo.Name, memberInfo.Name);
-            return new KeyValuePair<string, string>(memberInfo.Name, memberInfo.Name);
+            return attribute != null ?
+                new KeyValuePair<string, string>(attribute.ColumnName, memberInfo.Name) :
+                new KeyValuePair<string, string>(memberInfo.Name, memberInfo.Name);
         }
 
         private static string GetTableName()
