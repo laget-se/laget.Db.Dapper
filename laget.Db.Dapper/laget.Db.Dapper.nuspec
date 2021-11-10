@@ -15,15 +15,15 @@
     <repository type="git" url="https://github.com/laget-se/laget.Db.Dapper" branch="master" />
     <dependencies>
       <group targetFramework="netstandard2.1">
-        <dependency id="Dapper" version="2.0.90" />
+        <dependency id="Dapper" version="2.0.123" />
         <dependency id="Microsoft.Data.SqlClient" version="3.0.1" />
-        <dependency id="Microsoft.Extensions.Caching.Memory" version="5.0.0" />
+        <dependency id="Microsoft.Extensions.Caching.Memory" version="6.0.0" />
         <dependency id="System.ComponentModel.Annotations" version="5.0.0" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="Dapper" version="2.0.90" />
+        <dependency id="Dapper" version="2.0.123" />
         <dependency id="Microsoft.Data.SqlClient" version="3.0.1" />
-        <dependency id="Microsoft.Extensions.Caching.Memory" version="5.0.0" />
+        <dependency id="Microsoft.Extensions.Caching.Memory" version="6.0.0" />
         <dependency id="System.ComponentModel.Annotations" version="5.0.0" />
       </group>
     </dependencies>

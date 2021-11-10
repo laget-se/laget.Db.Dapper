@@ -423,10 +423,11 @@ namespace laget.Db.Dapper
             var obj = entity.ToObject();
 
             var properties = obj.GetType().GetProperties().Select(x => GetColumnName(entity, x));
-            var columns = string.Join(",", properties.Select(x => $"[{x}]"));
-            var keys = string.Join(",", properties.Select(x => $"@{x}"));
+            var columns = string.Join(",", properties.Select(x => $"[{x.Key}]"));
+            var keys = string.Join(",", properties.Select(x => $"@{x.Value}"));
+            var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
-            var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT INSERTED.[{GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault())}] VALUES ({keys})";
+            var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT INSERTED.[{index.Key}] VALUES ({keys})";
 
             return (sql, obj);
         }
@@ -436,9 +437,10 @@ namespace laget.Db.Dapper
             var obj = entity.ToObject();
 
             var properties = obj.GetType().GetProperties().Select(x => GetColumnName(entity, x));
-            var columnKeys = string.Join(", ", properties.Select(x => $"[{x}] = @{x}"));
+            var columnKeys = string.Join(", ", properties.Select(x => $"[{x.Key}] = @{x.Value}"));
+            var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
-            var sql = $"UPDATE [{TableName}] SET {columnKeys} WHERE [{GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault())}] = @Id";
+            var sql = $"UPDATE [{TableName}] SET {columnKeys} WHERE [{index.Key}] = @Id";
 
             return (sql, obj);
         }
@@ -449,8 +451,9 @@ namespace laget.Db.Dapper
             {
                 entity.Id
             };
+            var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
-            var sql = $"DELETE FROM [{TableName}] WHERE [{GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault())}] = @Id";
+            var sql = $"DELETE FROM [{TableName}] WHERE [{index.Key}] = @Id";
 
             return (sql, obj);
         }
@@ -487,8 +490,14 @@ namespace laget.Db.Dapper
             Cache.Remove(key);
         }
 
+        private static string GetCachePrefix()
+        {
+            var attribute = (DapperTableAttribute)Attribute.GetCustomAttribute(typeof(TEntity), typeof(DapperTableAttribute));
 
-        private static string GetColumnName(TEntity entity, MemberInfo memberInfo)
+            return attribute == null ? typeof(TEntity).Name : attribute.CachePrefix;
+        }
+
+        private static KeyValuePair<string, string> GetColumnName(TEntity entity, MemberInfo memberInfo)
         {
             var attribute = (DapperColumnAttribute)(entity.GetType().GetProperties()
                 .FirstOrDefault(x => x.Name == memberInfo.Name))?
@@ -496,17 +505,12 @@ namespace laget.Db.Dapper
 
             if (attribute != null)
             {
-                return attribute.ColumnName;
+                //return (attribute.ColumnName, memberInfo.Name);
+                return new KeyValuePair<string, string>(attribute.ColumnName, memberInfo.Name);
             }
 
-            return memberInfo.Name;
-        }
-
-        private static string GetCachePrefix()
-        {
-            var attribute = (DapperTableAttribute)Attribute.GetCustomAttribute(typeof(TEntity), typeof(DapperTableAttribute));
-
-            return attribute == null ? typeof(TEntity).Name : attribute.CachePrefix;
+            //return (memberInfo.Name, memberInfo.Name);
+            return new KeyValuePair<string, string>(memberInfo.Name, memberInfo.Name);
         }
 
         private static string GetTableName()

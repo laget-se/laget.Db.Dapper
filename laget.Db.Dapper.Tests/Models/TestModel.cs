@@ -1,10 +1,12 @@
 ﻿using System;
+using laget.Db.Dapper.Extensions;
 
 namespace laget.Db.Dapper.Tests.Models
 {
     public class TestModel : Entity
     {
         public string Column1 { get; set; }
+        [DapperColumn("IsActivated")]
         public bool Column2 { get; set; }
         public int Column3 { get; set; }
         public string Column4 { get; set; }
