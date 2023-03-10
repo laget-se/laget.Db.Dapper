@@ -42,7 +42,8 @@ jobs:
     - name: Publish
       uses: laget-se/publish-nuget@v2.6.10
       with:
-        PROJECT_FILE_PATH: laget.Db.Dapper/laget.Db.Dapper.csproj
+        INCLUDE_SYMBOLS: true
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
         NUSPEC_FILE: laget.Db.Dapper.nuspec
-        VERSION_STATIC: "1.1.${{github.run_number}}"
+        PROJECT_FILE_PATH: laget.Db.Dapper/laget.Db.Dapper.csproj
+        VERSION_STATIC: "1.2.${{github.run_number}}"
