@@ -36,7 +36,7 @@ namespace laget.Db.Dapper.Tests
             Assert.Equal(model.Column4, parameters.Column4);
             Assert.Equal(model.Column5, parameters.Column5);
 
-            Assert.Equal(model.Id, int.MaxValue);
+            Assert.Equal(int.MaxValue, model.Id);
             Assert.Equal(DateTime.Now.AddMonths(-1).ToShortDateString(), model.CreatedAt.ToShortDateString());
             Assert.Equal(DateTime.Now.ToShortDateString(), model.UpdatedAt.ToShortDateString());
         }
