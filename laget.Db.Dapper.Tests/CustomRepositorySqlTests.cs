@@ -1,6 +1,6 @@
-﻿using System;
-using laget.Db.Dapper.Tests.Fixtures;
+﻿using laget.Db.Dapper.Tests.Fixtures;
 using laget.Db.Dapper.Tests.Models;
+using System;
 using Xunit;
 
 namespace laget.Db.Dapper.Tests

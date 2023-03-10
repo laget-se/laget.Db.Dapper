@@ -1,6 +1,6 @@
-﻿using System;
-using laget.Db.Dapper.Tests.Fixtures;
+﻿using laget.Db.Dapper.Tests.Fixtures;
 using laget.Db.Dapper.Tests.Models;
+using System;
 using Xunit;
 
 namespace laget.Db.Dapper.Tests
@@ -36,9 +36,9 @@ namespace laget.Db.Dapper.Tests
             Assert.Equal(model.Column4, parameters.Column4);
             Assert.Equal(model.Column5, parameters.Column5);
 
-            Assert.Equal(model.Id, int.MaxValue);
-            Assert.Equal(model.CreatedAt.ToShortDateString(), DateTime.Now.AddMonths(-1).ToShortDateString());
-            Assert.Equal(model.UpdatedAt.ToShortDateString(), DateTime.Now.ToShortDateString());
+            Assert.Equal(int.MaxValue, model.Id);
+            Assert.Equal(DateTime.Now.AddMonths(-1).ToShortDateString(), model.CreatedAt.ToShortDateString());
+            Assert.Equal(DateTime.Now.ToShortDateString(), model.UpdatedAt.ToShortDateString());
         }
 
         [Fact]
