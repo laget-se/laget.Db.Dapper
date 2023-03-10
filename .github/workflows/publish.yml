@@ -40,7 +40,7 @@ jobs:
     - name: Build
       run: dotnet build laget.Db.Dapper/laget.Db.Dapper.csproj --no-restore --configuration Release
     - name: Publish
-      uses: laget-se/publish-nuget@v2.7.0
+      uses: laget-se/publish-nuget@v2.7.1
       with:
         INCLUDE_SYMBOLS: true
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
