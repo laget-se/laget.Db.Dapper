@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Caching.Memory;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace laget.Db.Dapper
 {
@@ -25,18 +26,26 @@ namespace laget.Db.Dapper
             return await Cache.GetOrCreate(cacheKey, entry => base.FindAsync());
         }
 
-        public override IEnumerable<TEntity> Find(string where)
-        {
-            var cacheKey = $"{CachePrefix}_{where.GetHashCode()}";
+        [Obsolete("This method has no more usages and will be removed in a future version, please use Where(string conditions) instead.")]
+        public override IEnumerable<TEntity> Find(string where) =>
+            Where(where);
 
-            return Cache.GetOrCreate(cacheKey, entry => base.Find());
+        [Obsolete("This method has no more usages and will be removed in a future version, please use WhereAsync(string conditions) instead.")]
+        public override async Task<IEnumerable<TEntity>> FindAsync(string where) =>
+            await WhereAsync(where);
+
+        public override IEnumerable<TEntity> Where(string conditions)
+        {
+            var cacheKey = $"{CachePrefix}_{conditions.GetHashCode()}";
+
+            return Cache.GetOrCreate(cacheKey, entry => base.Where(conditions));
         }
 
-        public override async Task<IEnumerable<TEntity>> FindAsync(string where)
+        public override async Task<IEnumerable<TEntity>> WhereAsync(string conditions)
         {
-            var cacheKey = $"{CachePrefix}_{where.GetHashCode()}";
+            var cacheKey = $"{CachePrefix}_{conditions.GetHashCode()}";
 
-            return await Cache.GetOrCreate(cacheKey, entry => base.FindAsync());
+            return await Cache.GetOrCreate(cacheKey, entry => base.WhereAsync(conditions));
         }
 
         public override TEntity Get(int id)

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Dapper;
+using laget.Db.Dapper.Extensions;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Transactions;
-using Dapper;
-using laget.Db.Dapper.Extensions;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace laget.Db.Dapper
 {
@@ -15,8 +15,13 @@ namespace laget.Db.Dapper
     {
         IEnumerable<TEntity> Find();
         Task<IEnumerable<TEntity>> FindAsync();
+        [Obsolete("This method has no more usages and will be removed in a future version, please use Where(string conditions) instead.")]
         IEnumerable<TEntity> Find(string where);
+        [Obsolete("This method has no more usages and will be removed in a future version, please use WhereAsync(string conditions) instead.")]
         Task<IEnumerable<TEntity>> FindAsync(string where);
+
+        IEnumerable<TEntity> Where(string conditions);
+        Task<IEnumerable<TEntity>> WhereAsync(string conditions);
 
         TEntity Get(int id);
         Task<TEntity> GetAsync(int id);
@@ -78,21 +83,29 @@ namespace laget.Db.Dapper
             }
         }
 
-        public virtual IEnumerable<TEntity> Find(string where)
+        [Obsolete("This method has no more usages and will be removed in a future version, please use Where(string conditions) instead.")]
+        public virtual IEnumerable<TEntity> Find(string where) =>
+            Where(where);
+
+        [Obsolete("This method has no more usages and will be removed in a future version, please use WhereAsync(string conditions) instead.")]
+        public virtual async Task<IEnumerable<TEntity>> FindAsync(string where) =>
+            await WhereAsync(where);
+
+        public virtual IEnumerable<TEntity> Where(string conditions)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var sql = GetWhereQuery(where);
+                var sql = GetWhereQuery(conditions);
 
                 return connection.Query<TEntity>(sql);
             }
         }
 
-        public virtual async Task<IEnumerable<TEntity>> FindAsync(string where)
+        public virtual async Task<IEnumerable<TEntity>> WhereAsync(string conditions)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var sql = GetWhereQuery(where);
+                var sql = GetWhereQuery(conditions);
 
                 return await connection.QueryAsync<TEntity>(sql);
             }
@@ -473,9 +486,9 @@ namespace laget.Db.Dapper
             return (sql, obj);
         }
 
-        protected string GetWhereQuery(string where)
+        protected string GetWhereQuery(string conditions)
         {
-            var sql = $"SELECT * FROM [{TableName}] WHERE {where}";
+            var sql = $"SELECT * FROM [{TableName}] WHERE {conditions}";
 
             return sql;
         }
