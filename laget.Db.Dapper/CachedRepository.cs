@@ -12,27 +12,32 @@ namespace laget.Db.Dapper
         {
         }
 
-        public override IEnumerable<TEntity> Find()
-        {
-            var cacheKey = $"{CachePrefix}";
-
-            return Cache.GetOrCreate(cacheKey, entry => base.Find());
-        }
-
-        public override async Task<IEnumerable<TEntity>> FindAsync()
-        {
-            var cacheKey = $"{CachePrefix}";
-
-            return await Cache.GetOrCreate(cacheKey, entry => base.FindAsync());
-        }
-
+        [Obsolete("This method has no more usages and will be removed in a future version, please use List() instead.")]
+        public override IEnumerable<TEntity> Find() =>
+            List();
+        [Obsolete("This method has no more usages and will be removed in a future version, please use ListAsync() instead.")]
+        public override async Task<IEnumerable<TEntity>> FindAsync() =>
+            await ListAsync();
         [Obsolete("This method has no more usages and will be removed in a future version, please use Where(string conditions) instead.")]
         public override IEnumerable<TEntity> Find(string where) =>
             Where(where);
-
         [Obsolete("This method has no more usages and will be removed in a future version, please use WhereAsync(string conditions) instead.")]
         public override async Task<IEnumerable<TEntity>> FindAsync(string where) =>
             await WhereAsync(where);
+
+        public override IEnumerable<TEntity> List()
+        {
+            var cacheKey = $"{CachePrefix}";
+
+            return Cache.GetOrCreate(cacheKey, entry => base.List());
+        }
+
+        public override async Task<IEnumerable<TEntity>> ListAsync()
+        {
+            var cacheKey = $"{CachePrefix}";
+
+            return await Cache.GetOrCreate(cacheKey, entry => base.ListAsync());
+        }
 
         public override IEnumerable<TEntity> Where(string conditions)
         {
