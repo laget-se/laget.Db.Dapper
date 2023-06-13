@@ -13,15 +13,6 @@ namespace laget.Db.Dapper
 {
     public interface IRepository<TEntity>
     {
-        [Obsolete("This method has no more usages and will be removed in a future version, please use List() instead.")]
-        IEnumerable<TEntity> Find();
-        [Obsolete("This method has no more usages and will be removed in a future version, please use ListAsync() instead.")]
-        Task<IEnumerable<TEntity>> FindAsync();
-        [Obsolete("This method has no more usages and will be removed in a future version, please use Where(string conditions) instead.")]
-        IEnumerable<TEntity> Find(string where);
-        [Obsolete("This method has no more usages and will be removed in a future version, please use WhereAsync(string conditions) instead.")]
-        Task<IEnumerable<TEntity>> FindAsync(string where);
-
         IEnumerable<TEntity> List();
         Task<IEnumerable<TEntity>> ListAsync();
 
@@ -65,19 +56,6 @@ namespace laget.Db.Dapper
             SqlMapper.SetTypeMap(typeof(TEntity), new CustomPropertyTypeMap(typeof(TEntity), (type, columnName)
                 => type.GetProperties().FirstOrDefault(prop => GetColumnName(prop) == columnName.ToLower())));
         }
-
-        [Obsolete("This method has no more usages and will be removed in a future version, please use Where(string conditions) instead.")]
-        public virtual IEnumerable<TEntity> Find() =>
-            List();
-        [Obsolete("This method has no more usages and will be removed in a future version, please use WhereAsync(string conditions) instead.")]
-        public virtual async Task<IEnumerable<TEntity>> FindAsync() =>
-            await ListAsync();
-        [Obsolete("This method has no more usages and will be removed in a future version, please use Where(string conditions) instead.")]
-        public virtual IEnumerable<TEntity> Find(string where) =>
-            Where(where);
-        [Obsolete("This method has no more usages and will be removed in a future version, please use WhereAsync(string conditions) instead.")]
-        public virtual async Task<IEnumerable<TEntity>> FindAsync(string where) =>
-            await WhereAsync(where);
 
         public virtual IEnumerable<TEntity> List()
         {
@@ -222,7 +200,6 @@ namespace laget.Db.Dapper
             using (var connection = new SqlConnection(ConnectionString))
             {
                 var id = (int)connection.ExecuteScalar(sql, parameters);
-
                 return Get(id);
             }
         }
@@ -459,14 +436,14 @@ namespace laget.Db.Dapper
         protected (string sql, object parameters) GetInsertQuery(TEntity entity)
         {
             var obj = entity.ToObject();
+            var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
             var properties = obj.GetType().GetProperties().Select(x => GetColumnName(entity, x));
             if (!properties.Any())
-                return ($"INSERT INTO [{TableName}] DEFAULT VALUES", null);
+                return ($"INSERT INTO [{TableName}] OUTPUT INSERTED.[{index.Key}] DEFAULT VALUES", null);
 
             var columns = string.Join(",", properties.Select(x => $"[{x.Key}]"));
             var keys = string.Join(",", properties.Select(x => $"@{x.Value}"));
-            var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
             var sql = $"INSERT INTO [{TableName}] ({columns}) OUTPUT INSERTED.[{index.Key}] VALUES ({keys})";
 

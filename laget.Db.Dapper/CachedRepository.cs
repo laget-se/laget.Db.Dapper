@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,19 +10,6 @@ namespace laget.Db.Dapper
             : base(provider)
         {
         }
-
-        [Obsolete("This method has no more usages and will be removed in a future version, please use List() instead.")]
-        public override IEnumerable<TEntity> Find() =>
-            List();
-        [Obsolete("This method has no more usages and will be removed in a future version, please use ListAsync() instead.")]
-        public override async Task<IEnumerable<TEntity>> FindAsync() =>
-            await ListAsync();
-        [Obsolete("This method has no more usages and will be removed in a future version, please use Where(string conditions) instead.")]
-        public override IEnumerable<TEntity> Find(string where) =>
-            Where(where);
-        [Obsolete("This method has no more usages and will be removed in a future version, please use WhereAsync(string conditions) instead.")]
-        public override async Task<IEnumerable<TEntity>> FindAsync(string where) =>
-            await WhereAsync(where);
 
         public override IEnumerable<TEntity> List()
         {

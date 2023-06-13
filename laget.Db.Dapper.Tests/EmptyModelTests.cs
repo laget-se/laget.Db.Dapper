@@ -16,14 +16,13 @@ namespace laget.Db.Dapper.Tests
         [Fact]
         public void GetInsertQueryGeneratesSql()
         {
-            var model = new EmptyModel
-            {
-            };
+            var model = new EmptyModel();
 
             var query = _repository.ExposedGetInsertQuery(model);
-            dynamic parameters = query.parameters;
+            var parameters = query.parameters;
 
-            Assert.Equal("INSERT INTO [EmptyModel] DEFAULT VALUES", query.sql);
+            Assert.Equal("INSERT INTO [Table] OUTPUT INSERTED.[Id] DEFAULT VALUES", query.sql);
+            Assert.Null(parameters);
         }
     }
 }
