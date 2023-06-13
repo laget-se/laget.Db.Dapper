@@ -31,12 +31,6 @@ namespace laget.Db.Dapper.Tests.Fixtures
             _dictionary = new ConcurrentDictionary<int, TEntity>();
         }
 
-        public override IEnumerable<TEntity> Find() =>
-            List();
-
-        public override async Task<IEnumerable<TEntity>> FindAsync() =>
-            await ListAsync();
-
         public override IEnumerable<TEntity> List()
         {
             return _dictionary.Select(x => x.Value);
