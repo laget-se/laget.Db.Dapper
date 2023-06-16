@@ -39,19 +39,31 @@ public class DatabaseModule : Module
 ```c#
 public interface IRepository<TEntity>
 {
-    IEnumerable<TEntity> Find();
-    Task<IEnumerable<TEntity>> FindAsync();
+    IEnumerable<TEntity> List();
+    Task<IEnumerable<TEntity>> ListAsync();
+
+    IEnumerable<TEntity> Where(string conditions);
+    Task<IEnumerable<TEntity>> WhereAsync(string conditions);
+
     TEntity Get(int id);
     Task<TEntity> GetAsync(int id);
+    IEnumerable<TEntity> Get(int[] ids);
+    Task<IEnumerable<TEntity>> GetAsync(int[] ids);
+    
+    TEntity Insert(TEntity entity);
+    Task<TEntity> InsertAsync(TEntity entity);
+    void Insert(IEnumerable<TEntity> entities);
+    Task InsertAsync(IEnumerable<TEntity> entities);
 
-    int Insert(TEntity entity);
-    Task<int> InsertAsync(TEntity entity);
-
-    void Update(TEntity entity);
-    Task UpdateAsync(TEntity entity);
+    TEntity Update(TEntity entity);
+    Task<TEntity> UpdateAsync(TEntity entity);
+    void Update(IEnumerable<TEntity> entities);
+    Task UpdateAsync(IEnumerable<TEntity> entities);
 
     void Delete(TEntity entity);
     Task DeleteAsync(TEntity entity);
+    void Delete(IEnumerable<TEntity> entities);
+    Task DeleteAsync(IEnumerable<TEntity> entities);
 }
 ```
 
