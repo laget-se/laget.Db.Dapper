@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace laget.Db.Dapper
 {
-    public interface IIPageableRepository<TEntity> : IRepository<TEntity>
+    public interface IPageableRepository<TEntity> : IRepository<TEntity>
     {
         PaginationResult<TEntity> List(PaginationFilter filter);
         Task<PaginationResult<TEntity>> ListAsync(PaginationFilter filter);
