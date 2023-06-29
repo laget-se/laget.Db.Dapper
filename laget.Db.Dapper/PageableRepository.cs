@@ -13,7 +13,7 @@ namespace laget.Db.Dapper
         Task<PaginationResult<TEntity>> ListAsync(PaginationFilter filter, string where);
     }
 
-    public class PageableRepository<TEntity> : Repository<TEntity>, IIPageableRepository<TEntity> where TEntity : Entity
+    public class PageableRepository<TEntity> : Repository<TEntity>, IPageableRepository<TEntity> where TEntity : Entity
     {
         public PageableRepository(IDapperDefaultProvider provider)
             : base(provider)
