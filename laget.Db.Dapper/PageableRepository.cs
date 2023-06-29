@@ -37,7 +37,7 @@ namespace laget.Db.Dapper
 
                 var parameters = new
                 {
-                    offset = filter.CurrentPage,
+                    offset = filter.Offset,
                     size = filter.PageSize
                 };
 
@@ -70,7 +70,7 @@ namespace laget.Db.Dapper
 
                 var parameters = new
                 {
-                    offset = filter.CurrentPage,
+                    offset = filter.Offset,
                     size = filter.PageSize
                 };
 
