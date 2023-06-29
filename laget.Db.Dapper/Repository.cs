@@ -62,7 +62,8 @@ namespace laget.Db.Dapper
             using (var connection = new SqlConnection(ConnectionString))
             {
                 var sql = $@"
-                    SELECT * FROM [{TableName}]";
+                    SELECT *
+                    FROM [{TableName}]";
 
                 return connection.Query<TEntity>(sql);
             }
@@ -73,7 +74,8 @@ namespace laget.Db.Dapper
             using (var connection = new SqlConnection(ConnectionString))
             {
                 var sql = $@"
-                    SELECT * FROM [{TableName}]";
+                    SELECT *
+                    FROM [{TableName}]";
 
                 return await connection.QueryAsync<TEntity>(sql);
             }
@@ -107,7 +109,8 @@ namespace laget.Db.Dapper
                 var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
                 var sql = $@"
-                    SELECT * FROM [{TableName}]
+                    SELECT *
+                    FROM [{TableName}]
                     WHERE [{index.Key}] = @id";
 
                 var parameters = new
@@ -132,7 +135,8 @@ namespace laget.Db.Dapper
                 var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
                 var sql = $@"
-                    SELECT * FROM [{TableName}]
+                    SELECT *
+                    FROM [{TableName}]
                     WHERE [{index.Key}] = @id";
 
                 var parameters = new
@@ -157,7 +161,8 @@ namespace laget.Db.Dapper
                 var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
                 var sql = $@"
-                    SELECT * FROM [{TableName}]
+                    SELECT *
+                    FROM [{TableName}]
                     WHERE [{index.Key}] IN @ids";
 
                 var parameters = new
@@ -179,7 +184,8 @@ namespace laget.Db.Dapper
                 var index = GetColumnName(entity, entity.GetType().GetMember("Id").FirstOrDefault());
 
                 var sql = $@"
-                    SELECT * FROM [{TableName}]
+                    SELECT *
+                    FROM [{TableName}]
                     WHERE [{index.Value}] IN @ids";
 
                 var parameters = new
