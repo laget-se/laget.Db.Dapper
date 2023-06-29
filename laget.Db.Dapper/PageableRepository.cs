@@ -7,8 +7,8 @@ namespace laget.Db.Dapper
 {
     public interface IIPageableRepository<TEntity> : IRepository<TEntity>
     {
-        PaginationResult<TEntity> List(Pagination filter);
-        Task<PaginationResult<TEntity>> ListAsync(Pagination filter);
+        PaginationResult<TEntity> List(PaginationFilter filter);
+        Task<PaginationResult<TEntity>> ListAsync(PaginationFilter filter);
     }
 
     public class PageableRepository<TEntity> : Repository<TEntity>, IIPageableRepository<TEntity> where TEntity : Entity
@@ -18,7 +18,7 @@ namespace laget.Db.Dapper
         {
         }
 
-        public PaginationResult<TEntity> List(Pagination filter)
+        public PaginationResult<TEntity> List(PaginationFilter filter)
         {
             var result = new PaginationResult<TEntity>();
 
@@ -28,7 +28,7 @@ namespace laget.Db.Dapper
 
                 var sql = $@"
                     SELECT t.*
-                    FROM [{TableName}] t.
+                    FROM [{TableName}] t
                     ORDER BY Id
                     OFFSET @offset ROWS
                     FETCH NEXT @size ROWS ONLY;
@@ -51,7 +51,7 @@ namespace laget.Db.Dapper
             return result;
         }
 
-        public async Task<PaginationResult<TEntity>> ListAsync(Pagination filter)
+        public async Task<PaginationResult<TEntity>> ListAsync(PaginationFilter filter)
         {
             var result = new PaginationResult<TEntity>();
 
@@ -61,7 +61,7 @@ namespace laget.Db.Dapper
 
                 var sql = $@"
                     SELECT t.*
-                    FROM [{TableName}] t.
+                    FROM [{TableName}] t
                     ORDER BY Id
                     OFFSET @offset ROWS
                     FETCH NEXT @size ROWS ONLY;
