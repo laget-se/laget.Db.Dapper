@@ -4,7 +4,7 @@
     <id>laget.Db.Dapper</id>
     <title>laget.Db.Dapper</title>
     <version>$version$</version>
-    <authors>gonace,laget.se</authors>
+    <authors>laget.se</authors>
     <owners>laget.se</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A generic implementation of Dapper, a high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc...</description>
