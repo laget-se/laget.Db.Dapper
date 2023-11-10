@@ -8,7 +8,7 @@ namespace laget.Db.Dapper.Models
         public int PageSize { get; set; } = 500;
 
         public string OrderByColumn { get; set; } = "Id";
-        public Order Order { get; set; }
+        public Order Order { get; set; } = Order.Descending;
 
         public int Offset => (CurrentPage - 1) * PageSize;
     }
