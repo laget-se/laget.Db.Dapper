@@ -65,7 +65,7 @@ namespace laget.Db.Dapper
                 var sql = $@"
                     SELECT t.*
                     FROM [{TableName}] t
-                    ORDER BY Id
+                    ORDER BY {filter.OrderByColumn} {filter.Order.GetDescription()}
                     OFFSET @offset ROWS
                     FETCH NEXT @size ROWS ONLY;
                     SELECT COUNT(*)
@@ -98,7 +98,7 @@ namespace laget.Db.Dapper
                     SELECT t.*
                     FROM [{TableName}] t
                     WHERE {where}
-                    ORDER BY Id
+                    ORDER BY {filter.OrderByColumn} {filter.Order.GetDescription()}
                     OFFSET @offset ROWS
                     FETCH NEXT @size ROWS ONLY;
                     SELECT COUNT(*)
@@ -134,7 +134,7 @@ namespace laget.Db.Dapper
                     SELECT t.*
                     FROM [{TableName}] t
                     WHERE {where}
-                    ORDER BY Id
+                    ORDER BY {filter.OrderByColumn} {filter.Order.GetDescription()}
                     OFFSET @offset ROWS
                     FETCH NEXT @size ROWS ONLY;
                     SELECT COUNT(*)
