@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using laget.Db.Dapper.Extensions;
 using laget.Db.Dapper.Models;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace laget.Db.Dapper
                 var sql = $@"
                     SELECT t.*
                     FROM [{TableName}] t
-                    ORDER BY Id
+                    ORDER BY {filter.OrderByColumn} {filter.Order.GetDescription()}
                     OFFSET @offset ROWS
                     FETCH NEXT @size ROWS ONLY;
                     SELECT COUNT(*)
