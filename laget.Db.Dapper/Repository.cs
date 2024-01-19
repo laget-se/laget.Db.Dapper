@@ -203,23 +203,28 @@ namespace laget.Db.Dapper
         {
             var (sql, parameters) = GetInsertQuery(entity);
 
+            int id;
+
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var id = (int)connection.ExecuteScalar(sql, parameters);
-                return Get(id);
+                id = (int)connection.ExecuteScalar(sql, parameters);
             }
+
+            return Get(id);
         }
 
         public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
             var (sql, parameters) = GetInsertQuery(entity);
 
+            int id;
+
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var id = (int)await connection.ExecuteScalarAsync(sql, parameters);
-
-                return await GetAsync(id);
+                id = (int)await connection.ExecuteScalarAsync(sql, parameters);
             }
+
+            return await GetAsync(id);
         }
 
         public virtual void Insert(IEnumerable<TEntity> entities)
