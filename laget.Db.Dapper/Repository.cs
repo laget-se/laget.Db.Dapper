@@ -284,8 +284,6 @@ namespace laget.Db.Dapper
                     {
                         connection.Execute(sql, entity, transaction);
                         transaction.Commit();
-
-                        return Get(entity.Id);
                     }
                     catch (Exception ex)
                     {
@@ -294,6 +292,8 @@ namespace laget.Db.Dapper
                     }
                 }
             }
+
+            return Get(entity.Id);
         }
 
         public virtual async Task<TEntity> UpdateAsync(TEntity entity)
@@ -310,8 +310,6 @@ namespace laget.Db.Dapper
                     {
                         await connection.ExecuteAsync(sql, entity, transaction);
                         transaction.Commit();
-
-                        return await GetAsync(entity.Id);
                     }
                     catch (Exception ex)
                     {
@@ -320,6 +318,8 @@ namespace laget.Db.Dapper
                     }
                 }
             }
+
+            return await GetAsync(entity.Id);
         }
 
         public void Update(IEnumerable<TEntity> entities)
