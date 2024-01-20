@@ -34,6 +34,6 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - run: dotnet restore
-    - run: dotnet build --configuration Release laget.Db.Dapper/laget.Db.Dapper.csproj
+    - run: dotnet build --configuration Release laget.Db.Dapper/laget.Db.Dapper.csproj -p:Version=${{vars.VERSION}}.${{github.run_number}}
     - run: dotnet pack --configuration Release laget.Db.Dapper/laget.Db.Dapper.csproj --no-build -p:Version=${{vars.VERSION}}.${{github.run_number}} -p:PackageVersion=${{vars.VERSION}}.${{github.run_number}} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NuspecFile=laget.Db.Dapper.nuspec
     - run: dotnet nuget push laget.Db.Dapper/bin/Release/laget.Db.Dapper.${{vars.VERSION}}.${{github.run_number}}.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
